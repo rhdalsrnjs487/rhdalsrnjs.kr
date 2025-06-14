@@ -45,5 +45,51 @@
   <p>이 페이지는 GitHub Pages를 통해 호스팅되고 있습니다.</p>
   
   <button onclick="location.href='박태양.html'">태양아..?</button>
+  <h2>신청하기</h2>
+<form id="applyForm">
+  <input type="text" id="applicantName" placeholder="이름" required /><br/><br/>
+  <input type="email" id="applicantEmail" placeholder="이메일" required /><br/><br/>
+  <textarea id="applicantMessage" placeholder="신청 내용" required></textarea><br/><br/>
+  <button type="submit">신청하기</button>
+</form>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBWarrPwB2j_YF5PH0OISFfV1uMJ4kqLC0",
+    authDomain: "test-formf.firebaseapp.com",
+    projectId: "test-formf",
+    storageBucket: "test-formf.firebasestorage.app",
+    messagingSenderId: "915654574182",
+    appId: "1:915654574182:web:79813dacb1e1304fb9eda7"
+    };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const form = document.getElementById('applyForm');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('applicantName').value;
+    const email = document.getElementById('applicantEmail').value;
+    const message = document.getElementById('applicantMessage').value;
+
+    try {
+      await addDoc(collection(db, "applications"), {
+        name: name,
+        email: email,
+        message: message,
+        submittedAt: new Date()
+      });
+      alert('신청이 완료되었습니다!');
+      form.reset();
+    } catch (error) {
+      alert('신청 중 오류가 발생했습니다: ' + error);
+    }
+  });
+</script>
 </body>
 </html>
