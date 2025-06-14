@@ -122,6 +122,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    quantityInput.disabled = true;
+
+
     // 4. 상품 선택에 따라 수량 입력 활성/비활성
     const productSelect = document.getElementById("product");
     const quantityInput = document.getElementById("quantity");
@@ -140,7 +143,7 @@
       e.preventDefault();
 
       const product = document.getElementById("product").value;
-      const quantity = document.getElementById("quantity").value || "-";Add commentMore actions
+      const quantity = document.getElementById("quantity").value || "-";
       const name = document.getElementById("name").value;
       const phone = document.getElementById("phone").value;
       const instagram = document.getElementById("instagram").value;
