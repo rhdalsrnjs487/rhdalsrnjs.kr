@@ -58,12 +58,12 @@
 
     // Firebase 설정
     const firebaseConfig = {
-      apiKey: "여기에_복사한_apiKey",
-      authDomain: "여기에_authDomain",
-      projectId: "여기에_projectId",
-      storageBucket: "여기에_storageBucket",
-      messagingSenderId: "여기에_senderId",
-      appId: "여기에_appId"
+    apiKey: "AIzaSyBWarrPwB2j_YF5PH0OISFfV1uMJ4kqLC0",
+    authDomain: "test-formf.firebaseapp.com",
+    projectId: "test-formf",
+    storageBucket: "test-formf.firebasestorage.app",
+    messagingSenderId: "915654574182",
+    appId: "1:915654574182:web:79813dacb1e1304fb9eda7"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -89,7 +89,7 @@
         userInfo.innerText = `👤 로그인: ${email}`;
 
         // 관리자 이메일만 허용
-        if (email !== "관리자이메일@gmail.com") {
+        if (email !== "rhdalsrnjs488@gmail.com") {
           alert("접근 권한이 없습니다.");
           return;
         }
