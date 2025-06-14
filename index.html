@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>냥코 핵 신청하기기</title>
+  <title>냥코 핵 신청하기</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -140,6 +140,33 @@
       e.preventDefault();
 
       const product = document.getElementById("product").value;
-      const quantity = document.getElementById("quantity").value |표" style="width: 300px; border-radius: 8px; display: block; margin: 0 auto;" />
+      const quantity = document.getElementById("quantity").value || "-";Add commentMore actions
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const instagram = document.getElementById("instagram").value;
+      const request = document.getElementById("request").value;
+
+      try {
+        await addDoc(collection(db, "applications"), {
+          product,
+          quantity,
+          name,
+          phone,
+          instagram,
+          request,
+          submittedAt: new Date()
+        });
+        alert("신청이 완료되었습니다!");
+        document.getElementById("orderForm").reset();
+        quantityInput.disabled = false; // reset 후 다시 활성화
+      } catch (error) {
+        alert("신청에 실패했습니다. 다시 시도해주세요.");
+        console.error("Firestore 저장 오류:", error);
+      }
+    });
+  </script>
+  <p>베타 테스트 중입니다.</p>
+  <h3>아래 가격표 확인 후 신청 바랍니다.</h3>
+  <img src="price.jpg" alt="가격표표" style="width: 300px; border-radius: 8px; display: block; margin: 0 auto;" />
 </body>
 </html>
