@@ -129,15 +129,6 @@
     const productSelect = document.getElementById("product");
     const quantityInput = document.getElementById("quantity");
 
-    productSelect.addEventListener("change", () => {
-      if (productSelect.value === "통조림") {
-        quantityInput.disabled = false;
-      } else {
-        quantityInput.disabled = true;
-        quantityInput.value = "";
-      }
-    });
-
     // 5. 신청 처리
     document.getElementById("orderForm").addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -166,6 +157,14 @@
         alert("신청에 실패했습니다. 다시 시도해주세요.");
         console.error("Firestore 저장 오류:", error);
       }
+    productSelect.addEventListener("change", () => {
+      if (productSelect.value === "통조림") {
+        quantityInput.disabled = false;
+      } else {
+        quantityInput.disabled = true;
+        quantityInput.value = "";
+      }
+    });
     });
   </script>
   <p>베타 테스트 중입니다.</p>
