@@ -17,7 +17,7 @@
       height: 100vh;
       margin: 0;
       flex-direction: column;
-      padding: 40px 16px;
+      padding: 0;
     }
     h1 {
       font-size: 2rem;
@@ -36,6 +36,11 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       width: 100%;
       max-width: 400px;
+    }
+    .form-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px;
     }
 
     input, select, textarea, button {
@@ -65,97 +70,98 @@
   <p>이 페이지는 GitHub Pages를 통해 호스팅되고 있습니다.</p>
 
   <h2>냥코 핵 신청 폼</h2>
-  <form id="orderForm">
-    <label>상품 선택</label><br/>
-    <select id="product" required>
-      <option value="">상품을 선택하세요</option>
-      <option value="통조림">통조림</option>
-      <option value="고양이">고양이</option>
-      <option value="아이템">아이템</option>
-      <option value="스테이지">스테이지</option>
-    </select><br/><br/>
+  <div class="form-wrapper">
+    <form id="orderForm">
+      <label>상품 선택</label><br/>
+      <select id="product" required>
+        <option value="">상품을 선택하세요</option>
+        <option value="통조림">통조림</option>
+        <option value="고양이">고양이</option>
+        <option value="아이템">아이템</option>
+        <option value="스테이지">스테이지</option>
+      </select><br/><br/>
 
-    <label>수량</label><br/>
-    <input type="number" id="quantity" min="1" required /><br/><br/>
+      <label>수량</label><br/>
+      <input type="number" id="quantity" min="1" required /><br/><br/>
 
-    <label>이름</label><br/>
-    <input type="text" id="name" required /><br/><br/>
+      <label>이름</label><br/>
+      <input type="text" id="name" required /><br/><br/>
+  
+      <label>전화번호</label><br/>
+      <input type="tel" id="phone" required /><br/><br/>
+  
+      <label>인스타 아이디</label><br/>
+      <input type="text" id="instagram" placeholder="@your_id" /><br/><br/>
+  
+      <label>요청사항</label><br/>
+      <textarea id="request" rows="4" placeholder="요청 내용을 작성해 주세요"></textarea><br/><br/>
 
-    <label>전화번호</label><br/>
-    <input type="tel" id="phone" required /><br/><br/>
+      <button type="submit">신청하기</button>
+    </form>
 
-    <label>인스타 아이디</label><br/>
-    <input type="text" id="instagram" placeholder="@your_id" /><br/><br/>
+    <!-- Firebase SDK -->
+    <script type="module">
+      // 1. Firebase 불러오기
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    <label>요청사항</label><br/>
-    <textarea id="request" rows="4" placeholder="요청 내용을 작성해 주세요"></textarea><br/><br/>
+      // 2. Firebase 설정 (아래는 예시이므로 본인 걸로 교체)
+      const firebaseConfig = {
+        apiKey: "AIzaSyBWarrPwB2j_YF5PH0OISFfV1uMJ4kqLC0",
+        authDomain: "test-formf.firebaseapp.com",
+        projectId: "test-formf",
+        storageBucket: "test-formf.firebasestorage.app",
+        messagingSenderId: "915654574182",
+        appId: "1:915654574182:web:79813dacb1e1304fb9eda7"
+        };
+  
+      // 3. Firebase 초기화
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
 
-    <button type="submit">신청하기</button>
-  </form>
+      // 4. 상품 선택에 따라 수량 입력 활성/비활성
+      const productSelect = document.getElementById("product");
+      const quantityInput = document.getElementById("quantity");
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    // 1. Firebase 불러오기
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+      productSelect.addEventListener("change", () => {
+        if (productSelect.value === "통조림") {
+          quantityInput.disabled = false;
+        } else {
+          quantityInput.disabled = true;
+          quantityInput.value = "";
+        }
+      });
 
-    // 2. Firebase 설정 (아래는 예시이므로 본인 걸로 교체)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBWarrPwB2j_YF5PH0OISFfV1uMJ4kqLC0",
-      authDomain: "test-formf.firebaseapp.com",
-      projectId: "test-formf",
-      storageBucket: "test-formf.firebasestorage.app",
-      messagingSenderId: "915654574182",
-      appId: "1:915654574182:web:79813dacb1e1304fb9eda7"
-      };
+      // 5. 신청 처리
+      document.getElementById("orderForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    // 3. Firebase 초기화
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+        const product = document.getElementById("product").value;
+        const quantity = document.getElementById("quantity").value || "-";
+        const name = document.getElementById("name").value;
+        const phone = document.getElementById("phone").value;
+        const instagram = document.getElementById("instagram").value;
+        const request = document.getElementById("request").value;
 
-    // 4. 상품 선택에 따라 수량 입력 활성/비활성
-    const productSelect = document.getElementById("product");
-    const quantityInput = document.getElementById("quantity");
-
-    productSelect.addEventListener("change", () => {
-      if (productSelect.value === "통조림") {
-        quantityInput.disabled = false;
-      } else {
-        quantityInput.disabled = true;
-        quantityInput.value = "";
-      }
-    });
-
-    // 5. 신청 처리
-    document.getElementById("orderForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const product = document.getElementById("product").value;
-      const quantity = document.getElementById("quantity").value || "-";
-      const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
-      const instagram = document.getElementById("instagram").value;
-      const request = document.getElementById("request").value;
-
-      try {
-        await addDoc(collection(db, "applications"), {
-          product,
-          quantity,
-          name,
-          phone,
-          instagram,
-          request,
-          submittedAt: new Date()
-        });
-        alert("신청이 완료되었습니다!");
-        document.getElementById("orderForm").reset();
-        quantityInput.disabled = false; // reset 후 다시 활성화
-      } catch (error) {
-        alert("신청에 실패했습니다. 다시 시도해주세요.");
-        console.error("Firestore 저장 오류:", error);
-      }
-    });
-  </script>
+        try {
+          await addDoc(collection(db, "applications"), {
+            product,
+            quantity,
+            name,
+            phone,
+            instagram,
+            request,
+            submittedAt: new Date()
+          });
+          alert("신청이 완료되었습니다!");
+          document.getElementById("orderForm").reset();
+          quantityInput.disabled = false; // reset 후 다시 활성화
+        } catch (error) {
+          alert("신청에 실패했습니다. 다시 시도해주세요.");
+          console.error("Firestore 저장 오류:", error);
+        }
+      });
+    </script>
   <p>베타 테스트 중입니다.</p>
 </body>
 </html>
