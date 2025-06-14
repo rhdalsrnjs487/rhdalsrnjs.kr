@@ -104,69 +104,71 @@
 
   <!-- Firebase SDK -->
   <script type="module">
-    // 1. Firebase 불러오기
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  // Firebase SDK 불러오기
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // 2. Firebase 설정 (아래는 예시이므로 본인 걸로 교체)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBWarrPwB2j_YF5PH0OISFfV1uMJ4kqLC0",
-      authDomain: "test-formf.firebaseapp.com",
-      projectId: "test-formf",
-      storageBucket: "test-formf.firebasestorage.app",
-      messagingSenderId: "915654574182",
-      appId: "1:915654574182:web:79813dacb1e1304fb9eda7"
-      };
+  // Firebase 설정
+  const firebaseConfig = {
+    apiKey: "AIzaSyBWarrPwB2j_YF5PH0OISFfV1uMJ4kqLC0",
+    authDomain: "test-formf.firebaseapp.com",
+    projectId: "test-formf",
+    storageBucket: "test-formf.firebasestorage.app",
+    messagingSenderId: "915654574182",
+    appId: "1:915654574182:web:79813dacb1e1304fb9eda7"
+  };
 
-    // 3. Firebase 초기화
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  // Firebase 초기화
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-    quantityInput.disabled = true;
+  // 요소 불러오기 (먼저!)
+  const productSelect = document.getElementById("product");
+  const quantityInput = document.getElementById("quantity");
 
+  // 처음엔 수량 비활성화
+  quantityInput.disabled = true;
 
-    // 4. 상품 선택에 따라 수량 입력 활성/비활성
-    const productSelect = document.getElementById("product");
-    const quantityInput = document.getElementById("quantity");
+  // 상품 선택 이벤트
+  productSelect.addEventListener("change", () => {
+    if (productSelect.value === "통조림") {
+      quantityInput.disabled = false;
+    } else {
+      quantityInput.disabled = true;
+      quantityInput.value = "";
+    }
+  });
 
-    // 5. 신청 처리
-    document.getElementById("orderForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+  // 폼 제출 이벤트
+  document.getElementById("orderForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-      const product = document.getElementById("product").value;
-      const quantity = document.getElementById("quantity").value || "-";
-      const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
-      const instagram = document.getElementById("instagram").value;
-      const request = document.getElementById("request").value;
+    const product = productSelect.value;
+    const quantity = quantityInput.value || "-";
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const instagram = document.getElementById("instagram").value;
+    const request = document.getElementById("request").value;
 
-      try {
-        await addDoc(collection(db, "applications"), {
-          product,
-          quantity,
-          name,
-          phone,
-          instagram,
-          request,
-          submittedAt: new Date()
-        });
-        alert("신청이 완료되었습니다!");
-        document.getElementById("orderForm").reset();
-        quantityInput.disabled = false; // reset 후 다시 활성화
-      } catch (error) {
-        alert("신청에 실패했습니다. 다시 시도해주세요.");
-        console.error("Firestore 저장 오류:", error);
-      }
-    productSelect.addEventListener("change", () => {
-      if (productSelect.value === "통조림") {
-        quantityInput.disabled = false;
-      } else {
-        quantityInput.disabled = true;
-        quantityInput.value = "";
-      }
-    });
-    });
-  </script>
+    try {
+      await addDoc(collection(db, "applications"), {
+        product,
+        quantity,
+        name,
+        phone,
+        instagram,
+        request,
+        submittedAt: new Date()
+      });
+      alert("신청이 완료되었습니다!");
+      document.getElementById("orderForm").reset();
+      quantityInput.disabled = true; // 초기화 시 다시 비활성화
+    } catch (error) {
+      alert("신청에 실패했습니다. 다시 시도해주세요.");
+      console.error("Firestore 저장 오류:", error);
+    }
+  });
+</script>
   <p>베타 테스트 중입니다.</p>
   <h3>아래 가격표 확인 후 신청 바랍니다.</h3>
   <img src="price.jpg" alt="가격표" style="width: 600px; border-radius: 8px; display: block; margin: 0 auto;" />
